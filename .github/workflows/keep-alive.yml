@@ -1,0 +1,23 @@
+name: Keep Services Alive
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/3 * * * *'
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Ping all services
+        shell: bash
+        run: |
+          urls=(
+            "https://url-shortner-q5k2.onrender.com/health"
+          )
+
+          for url in "${urls[@]}"; do
+            echo "Pinging $url"
+            curl --fail --silent --show-error "$url" || echo "Failed: $url"
+          done
